@@ -21,22 +21,24 @@ export default class App extends Component {
   };
 
   addContact = (name, number) => {
-    name !== "" && number !== ""
-      ? this.setState({
-          contacts: [
-            ...this.state.contacts,
-            { id: v4(), name: name, number: number },
-          ],
-        })
-      : alert("Name or Number not entered");
+    if (name !== "" && number !== "") {
+      this.setState((prevState) => ({
+        contacts: [
+          ...prevState.contacts,
+          { id: v4(), name: name, number: number },
+        ],
+      }));
+      return;
+    }
+    alert("Name or Number not entered");
   };
 
   deleteContact = ({ target: { name } }) => {
-    this.setState({
+    this.setState((prevState) => ({
       contacts: [
-        ...this.state.contacts.filter((contact) => contact.id !== name),
+        ...prevState.contacts.filter((contact) => contact.id !== name),
       ],
-    });
+    }));
   };
 
   render() {

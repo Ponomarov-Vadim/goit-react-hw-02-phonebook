@@ -4,11 +4,15 @@ import styled from "./ContactForm.module.css";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
+const initialState = {
+  name: "",
+  number: "",
+};
+
+const isTelNumber = (tel) => !Number.isNaN(Number(tel.split("-").join("")));
+
 export default class ContactForm extends Component {
-  state = {
-    name: "",
-    number: "",
-  };
+  state = { ...initialState };
 
   handleChange = ({ target: { name, value } }) => {
     this.setState({ [name]: value });
@@ -17,15 +21,21 @@ export default class ContactForm extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    this.props.contacts.find((contact) => contact.name === this.state.name) ===
-    undefined
-      ? this.props.addContact(this.state.name, this.state.number)
-      : alert(`${this.state.name} is alredy in contacts`);
+    if (
+      this.props.contacts.find(
+        (contact) => contact.name === this.state.name
+      ) === undefined
+    ) {
+      if (isTelNumber(this.state.number)) {
+        this.props.addContact(this.state.name, this.state.number);
+      } else {
+        alert(`"${this.state.number}" is incorrect telephone number`);
+      }
+    } else {
+      alert(`"${this.state.name}" is alredy in contacts`);
+    }
 
-    this.setState({
-      name: "",
-      number: "",
-    });
+    this.setState({ ...initialState });
   };
 
   render() {
